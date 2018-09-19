@@ -1,27 +1,37 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import './lib/UserGists';
+import { UserGists} from './lib/UserGists';
 
 
 class App extends Component {
-  componentDidMount(){
-    this.fetchData();
+  constructor(props) {
+    super(props);
+    this.state = {username: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
-  fetchData(){
-    fetch('https://api.github.com/users/segdeha/gists')
-    .then(response => response.json())
-    .then(json => console.log(json))
-    .catch(error => console.log('parsing failed', error))
+
+  handleChange(event) {
+    this.setState({username: event.target.value});
   }
+
+  handleSubmit(event) {
+    let username = this.state.username;
+    event.preventDefault();
+    UserGists(username);
+  }
+
   render() {
     return (
-      <div>
-        <p>This is where the search bar will be</p>
-        <button>Search</button>
-        
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.username} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
     );
   }
 }
